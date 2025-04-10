@@ -30,9 +30,10 @@ int main(void)
    while ((iChar = getchar()) != EOF)
    {
       lCharCount++;
-
+    //
       if (isspace(iChar))
       {
+        // 
          if (iInWord)
          {
             lWordCount++;
@@ -41,6 +42,7 @@ int main(void)
       }
       else
       {
+        /*inword tracks if we just in a word and the boolean is set to true if we*/
          if (! iInWord)
             iInWord = TRUE;
       }
@@ -65,7 +67,9 @@ int main(void)
    while ((iChar = getchar()) != EOF)
    {
       lCharCount++;
+/*if a space is detected we either evaluate if we shoudl chnage the inword boolean to false after we increase the word count or if we are in a word set the boolean to true. 
 
+*/ 
       if (isspace(iChar))
       {
          if (iInWord)
@@ -79,14 +83,15 @@ int main(void)
          if (! iInWord)
             iInWord = TRUE;
       }
-//increase the newline count if the new line charcter is detected 
+/*increase the newline count if the new line charcter is detected*/
 newlineLoop:
       if (!(iChar == '\n')) goto newlineLoopEnd;
          lLineCount++;
          goto newlineLoop;
 newlineLoopEnd:
    }
-// in the word 
+/*this is for the last word if you dont add a space after 
+the last word */
 wordLoop:
    if (!iInWord) goto wordLoopEnd;
       lWordCount++;
