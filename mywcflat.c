@@ -42,7 +42,7 @@ int main(void)
       }
       else
       {
-        /*inword tracks if we just in a word and the boolean is set to true if we*/
+        
          if (! iInWord)
             iInWord = TRUE;
       }
@@ -70,33 +70,35 @@ int main(void)
 /*if a space is detected we either evaluate if we shoudl chnage the inword boolean to false after we increase the word count or if we are in a word set the boolean to true. 
 
 */ 
-      if (isspace(iChar))
+      if (!(isspace(iChar))) goto spaceEnd;
       {
-         if (iInWord)
+    /*if the inword boolean was previously set to true as in we were ina  word then increase teh word count and then set inwrod to false since we detected a space as the car*/
+         if (!iInWord) goto else1;
          {
             lWordCount++;
             iInWord = FALSE;
-         }
-      }
-      else
-      {
-         if (! iInWord)
+            goto endif1;
+
+else1:
+ /*if the inword boolean was previously set to FALSE and a new charcter that isnta spcae or a newline is detected then we are in a new word so set the inword boolean to true.*/
+     if (iInWord) goto endinWord;
             iInWord = TRUE;
+           
+endinWord:
+endif1:
       }
 /*increase the newline count if the new line charcter is detected*/
-newlineLoop:
-      if (!(iChar == '\n')) goto newlineLoopEnd;
+
+      if (!(iChar == '\n')) goto newlineEnd;
          lLineCount++;
-         goto newlineLoop;
-newlineLoopEnd:
-   }
+newlineEnd:
+   
 /*this is for the last word if you dont add a space after 
 the last word */
-wordLoop:
-   if (!iInWord) goto wordLoopEnd;
+   if (!iInWord) goto wordEnd;
       lWordCount++;
-      goto wordLoop;
-wordLoopEnd:
+      
+wordEnd:
 
    printf("%7ld %7ld %7ld\n", lLineCount, lWordCount, lCharCount);
    return 0;
