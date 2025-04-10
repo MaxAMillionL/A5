@@ -81,8 +81,10 @@ int main(void)
       }
 //increase the newline count if the new line charcter is detected 
 newlineLoop:
-      if (iChar == '\n')
+      if (!(iChar == '\n')) goto newlineLoopEnd;
          lLineCount++;
+         goto newlineLoop;
+newlineLoopEnd:
    }
 // in the word 
 wordLoop:
@@ -90,7 +92,7 @@ wordLoop:
       lWordCount++;
       goto wordLoop;
 wordLoopEnd:
-   printf("%7ld %7ld %7ld\n", lLineCount, lWordCount, lCharCount);
 
+   printf("%7ld %7ld %7ld\n", lLineCount, lWordCount, lCharCount);
    return 0;
 }
