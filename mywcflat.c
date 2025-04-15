@@ -59,50 +59,46 @@ int main(void)
 }
 
 
-/*this is theflattened c im just using the top code as reference*/
+/* this is theflattened c im just using the top code as reference */
 
 
 
 
 
-int main(void)
+int main(void){
 
 loop1:
-   if ((iChar = getchar()) = EOF) goto endloop1;
-   
+   if ((iChar = getchar()) == EOF) goto endloop1;
       lCharCount++;
-/*if a space is detected we either evaluate if we shoudl chnage the inword boolean to false after we increase the word count or if we are in a word set the boolean to true. 
+   /* if a space is detected we either evaluate if we shoudl chnage the inword boolean to false after we increase the word count or if we are in a word set the boolean to true. */ 
+   if (!(isspace(iChar))) goto else1;
 
-*/ 
-      if (!(isspace(iChar))) goto else1;
+      /* if the inword boolean was previously set to true as in we were ina  word then increase teh word count and then set inwrod to false since we detected a space as the car */
+      if (!iInWord) goto endinWord;
+         lWordCount++;
+         iInWord = FALSE;     
+      endinWord:
 
-    /*if the inword boolean was previously set to true as in we were ina  word then increase teh word count and then set inwrod to false since we detected a space as the car*/
-         if (!iInWord) goto endinWord;
-         {
-            lWordCount++;
-            iInWord = FALSE;
-            
-endinWord:
-else1:
- /*if the inword boolean was previously set to FALSE and a new charcter that isnta spcae or a newline is detected then we are in a new word so set the inword boolean to true.*/
-     if (iInWord) goto endnotinWord;
-            iInWord = TRUE;
-           
-endnotinWord:
+   else1:
+      /* if the inword boolean was previously set to FALSE and a new charcter that isnta spcae or a newline is detected then we are in a new word so set the inword boolean to true. */
+      if (iInWord) goto endnotinWord;
+            iInWord = TRUE;  
+      endnotinWord:
 
-/*increase the newline count if the new line charcter is detected*/
+   /* increase the newline count if the new line charcter is detected */
 
-      if (!(iChar == '\n')) goto newlineEnd;
-         lLineCount++;
-newlineEnd:
+   if (!(iChar == '\n')) goto newlineEnd;
+      lLineCount++;
+   newlineEnd:
 
-    goto loop1;
+   goto loop1;
+
 endloop1:
-/*this is for the last word if you dont add a space after 
+/* this is for the last word if you dont add a space after 
 the last word */
    if (!iInWord) goto wordEnd;
       lWordCount++;
-wordEnd:
+   wordEnd:
 
 
    printf("%7ld %7ld %7ld\n", lLineCount, lWordCount, lCharCount);
