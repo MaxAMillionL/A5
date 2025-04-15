@@ -68,8 +68,8 @@ int main(void)
 int main(void){
 
 loop1:
-   if ((iChar = getchar()) == EOF) goto endloop1;
-      lCharCount++;
+if ((iChar = getchar()) == EOF) goto endloop1;
+   lCharCount++;
    /* if a space is detected we either evaluate if we shoudl chnage the inword boolean to false after we increase the word count or if we are in a word set the boolean to true. */ 
    if (!(isspace(iChar))) goto else1;
 
@@ -78,13 +78,14 @@ loop1:
          lWordCount++;
          iInWord = FALSE;     
       endinWord:
+   goto endelse1;
 
    else1:
       /* if the inword boolean was previously set to FALSE and a new charcter that isnta spcae or a newline is detected then we are in a new word so set the inword boolean to true. */
       if (iInWord) goto endnotinWord;
             iInWord = TRUE;  
       endnotinWord:
-
+   endelse1:
    /* increase the newline count if the new line charcter is detected */
 
    if (!(iChar == '\n')) goto newlineEnd;
@@ -96,11 +97,11 @@ loop1:
 endloop1:
 /* this is for the last word if you dont add a space after 
 the last word */
-   if (!iInWord) goto wordEnd;
-      lWordCount++;
-   wordEnd:
+if (!iInWord) goto wordEnd;
+   lWordCount++;
+wordEnd:
 
 
-   printf("%7ld %7ld %7ld\n", lLineCount, lWordCount, lCharCount);
-   return 0;
+printf("%7ld %7ld %7ld\n", lLineCount, lWordCount, lCharCount);
+return 0;
 }
