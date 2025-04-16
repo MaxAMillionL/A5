@@ -53,16 +53,41 @@ main:
         sub     sp, sp, MAIN_STACK_BYTECOUNT
         str     x30, [sp]
 loop1:
-    //if ((iChar = getchar()) == EOF) goto endloop1;
-   // if (lAbsSecond == 0) goto gcdLoopEnd
-        adr     x0, iChar
-        ldr     x0, [x0]
+        // if ((iChar = getchar()) == EOF) goto endloop1;
+        bl      getchar
         cmp     x0, EOF
         beq     endloop1
+        adr     x1, iChar
+        str     x0, [x1]
         
-        // printf("Enter an integer: ")
-        adr     x0, promptStr
-        bl      printf
+
+        // lCharCount++;
+        adr     x0, lCharCount
+        ldr     x1, [x0]
+        add     x1, x1, 1
+        str     x1, [x0]
+        
+        
+        // if (!(isspace(iChar))) goto else1;
+        adr     x0, iChar
+        ldr     x0, [x0]
+        bl      isspace
+        cmp     x0, FALSE
+        beq     else1
+
+
+        // if (!iInWord) goto endinWord;
+        adr     x0, iChar
+        ldr     x0, [x0]
+        cmp     x0, FALSE
+        beq     else1
+
+
+        // lWordCount++;
+        adr     x0, lWordCount
+        ldr     x1, [x0]
+        add     x1, x1, 1
+        str     x1, [x0]
 
         // scanf("%ld", &l1)
         adr     x0, scanfFormatStr
