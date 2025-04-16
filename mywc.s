@@ -38,9 +38,9 @@ iInWord:
 
         // Must be a multiple of 16 and we have teh return address of main whihc is 8 bytes but rounds up to 16 
         .equ    MAIN_STACK_BYTECOUNT, 16
-         .equ    TRUE, 1
-         .equ    FALSE, 0
-         .equ    EOF, -1
+        .equ    TRUE, 1
+        .equ    FALSE, 0
+        .equ    EOF, -1
 
         .global main
 
