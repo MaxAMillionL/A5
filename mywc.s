@@ -3,10 +3,13 @@
 // Author: Maxwell Lloyd and Venus Dinari 
 //----------------------------------------------------------------------
 
-        .section .rodata
+.section .rodata
 
 dataStr:
         .string "%7ld %7ld %7ld\n"
+
+newLine:
+        .string "\n"
 
 
 //----------------------------------------------------------------------
@@ -77,10 +80,10 @@ loop1:
 
 
         // if (!iInWord) goto endinWord;
-        adr     x0, iChar
+        adr     x0, iInWord
         ldr     x0, [x0]
         cmp     x0, FALSE
-        beq     else1
+        beq     endinWord
 
 
         // lWordCount++;
@@ -89,27 +92,76 @@ loop1:
         add     x1, x1, 1
         str     x1, [x0]
 
-        // scanf("%ld", &l1)
-        adr     x0, scanfFormatStr
-        adr     x1, l1
-        bl      scanf
 
-        // printf("Enter an integer: ")
-        adr     x0, promptStr
-        bl      printf
+        // iInWord = FALSE;
+        mov     x0, FALSE
+        adr     x1, iInWord
+        str     x0, [x1]
 
-        // scanf("%ld", &l2)
-        adr     x0, scanfFormatStr
-        adr     x1, l2
-        bl      scanf
+endinWord:
+        // goto endelse1
+        b       endelse1
 
-        // gcd()
-        bl      gcd
+else1:
 
-        // printf("The gcd is %ld\n", lGcd)
-        adr     x0, printfFormatStr
-        adr     x1, lGcd
+        // if (iInWord) goto endnotinWord;
+        adr     x0, iInWord
+        ldr     x0, [x0]
+        cmp     x0, TRUE
+        beq     endnotinWord
+
+
+        // iInWord = TRUE;
+        mov     x0, TRUE
+        adr     x1, iInWord
+        str     x0, [x1]
+
+endnotinWord:
+
+endelse1:
+
+        // if (!(iChar == '\n')) goto newlineEnd;
+        adr     x0, iChar
+        ldr     x0, [x0]
+        cmp     x0, newLine
+        bne     newlineEnd
+
+        // lLineCount++;
+        adr     x0, lLineCount
+        ldr     x1, [x0]
+        add     x1, x1, 1
+        str     x1, [x0]
+
+newLineEnd:
+
+        // goto loop1
+        b       loop1
+
+endloop1:
+
+        // if (!iInWord) goto wordEnd;
+        adr     x0, iInWord
+        ldr     x0, [x0]
+        cmp     x0, FALSE
+        beq     wordEnd
+
+
+        // lWordCount++;
+        adr     x0, lWordCount
+        ldr     x1, [x0]
+        add     x1, x1, 1
+        str     x1, [x0]
+
+wordEnd:
+
+        // printf("%7ld %7ld %7ld\n", lLineCount, lWordCount, lCharCount);
+        adr     x0, dataStr
+        adr     x1, lLineCount
         ldr     x1, [x1]
+        adr     x2, lWordCount
+        ldr     x2, [x2]
+        adr     x3, lCharCount
+        ldr     x3, [x3]
         bl      printf
 
         // Epilog and return 0
