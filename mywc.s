@@ -107,7 +107,7 @@ endelse1:
         // if (!(iChar == '\n')) goto newLineEnd;
         adr     x0, iChar
         ldr     x0, [x0]
-        cmp     x0, '\n'
+        cmp     w0, '\n'
         bne     newLineEnd
 
         // lLineCount++;
