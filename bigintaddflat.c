@@ -86,7 +86,7 @@ int BigInt_add(BigInt_T oAddend1, BigInt_T oAddend2, BigInt_T oSum)
       lSumLength++;
       notmaxdigit:
    
-   nocarryout:
+nocarryout:
    /* Set the length of the sum. */
    oSum->lLength = lSumLength;
 
