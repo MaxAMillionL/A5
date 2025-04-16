@@ -63,13 +63,13 @@ int BigInt_add(BigInt_T oAddend1, BigInt_T oAddend2, BigInt_T oSum)
       if (ulSum >= oAddend1->aulDigits[lIndex])goto nooverflow1;
       /* Check for overflow. */
          ulCarry = 1;
-nooverflow1:
+      nooverflow1:
       ulSum += oAddend2->aulDigits[lIndex];
 
       if (ulSum >= oAddend2->aulDigits[lIndex]) goto nooverflow2; 
       /* Check for overflow. */
          ulCarry = 1;
-nooverflow2:
+      nooverflow2:
 
       oSum->aulDigits[lIndex] = ulSum;
       lIndex++;
@@ -84,9 +84,9 @@ nooverflow2:
          return FALSE;
       oSum->aulDigits[lSumLength] = 1;
       lSumLength++;
-notmaxdigit:
+      notmaxdigit:
    
-nocarryout:
+   nocarryout:
    /* Set the length of the sum. */
    oSum->lLength = lSumLength;
 
