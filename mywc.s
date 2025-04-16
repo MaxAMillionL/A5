@@ -8,9 +8,6 @@
 dataStr:
         .string "%7ld %7ld %7ld\n"
 
-newLine:
-        .string "\n"
-
 //----------------------------------------------------------------------
         .section .bss
 
@@ -51,7 +48,7 @@ main:
 loop1:
         // if ((iChar = getchar()) == EOF) goto endloop1;
         bl      getchar
-        cmp     x0, EOF
+        cmp     w0, EOF
         beq     endloop1
         adr     x1, iChar
         str     x0, [x1]
@@ -110,7 +107,7 @@ endelse1:
         // if (!(iChar == '\n')) goto newLineEnd;
         adr     x0, iChar
         ldr     x0, [x0]
-        cmp     x0, newLine
+        cmp     x0, '\n'
         bne     newLineEnd
 
         // lLineCount++;
