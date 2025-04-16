@@ -54,32 +54,39 @@ int BigInt_add(BigInt_T oAddend1, BigInt_T oAddend2, BigInt_T oSum)
    ulCarry = 0;
    lIndex = 0;
    loop:
-   while(lIndex < lSumLength){
+   if(lIndex >= lSumLength) goto endloop;
       ulSum = ulCarry;
       ulCarry = 0;
 
       ulSum += oAddend1->aulDigits[lIndex];
-      if (ulSum < oAddend1->aulDigits[lIndex]) /* Check for overflow. */
-         ulCarry = 1;
 
-      ulSum += oAddend2->aulDigits[lIndex];
-      if (ulSum < oAddend2->aulDigits[lIndex]) /* Check for overflow. */
+      if (ulSum >= oAddend1->aulDigits[lIndex])goto nooverflow1;
+      /* Check for overflow. */
          ulCarry = 1;
+nooverflow1:
+      ulSum += oAddend2->aulDigits[lIndex];
+
+      if (ulSum >= oAddend2->aulDigits[lIndex]) goto nooverflow2; 
+      /* Check for overflow. */
+         ulCarry = 1;
+nooverflow2:
 
       oSum->aulDigits[lIndex] = ulSum;
       lIndex++;
-   }
+     goto loop;
+   
    endloop:
 
    /* Check for a carry out of the last "column" of the addition. */
-   if (ulCarry == 1)
-   {
-      if (lSumLength == MAX_DIGITS)
+   if (ulCarry != 1) goto nocarryout;
+   
+      if (lSumLength != MAX_DIGITS) goto notmaxdigit;
          return FALSE;
       oSum->aulDigits[lSumLength] = 1;
       lSumLength++;
-   }
-
+notmaxdigit:
+   
+nocarryout:
    /* Set the length of the sum. */
    oSum->lLength = lSumLength;
 
