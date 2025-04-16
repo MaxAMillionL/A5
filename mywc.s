@@ -51,7 +51,7 @@ loop1:
         cmp     w0, EOF
         beq     endloop1
         adr     x1, iChar
-        str     x0, [x1]
+        str     w0, [x1]
 
         // lCharCount++;
         adr     x0, lCharCount
@@ -61,15 +61,15 @@ loop1:
         
         // if (!(isspace(iChar))) goto else1;
         adr     x0, iChar
-        ldr     x0, [x0]
+        ldr     w0, [x0]
         bl      isspace
-        cmp     x0, FALSE
+        cmp     w0, FALSE
         beq     else1
 
         // if (!iInWord) goto endinWord;
         adr     x0, iInWord
-        ldr     x0, [x0]
-        cmp     x0, FALSE
+        ldr     w0, [x0]
+        cmp     w0, FALSE
         beq     endinWord
 
         // lWordCount++;
@@ -79,9 +79,9 @@ loop1:
         str     x1, [x0]
 
         // iInWord = FALSE;
-        mov     x0, FALSE
+        mov     w0, FALSE
         adr     x1, iInWord
-        str     x0, [x1]
+        str     w0, [x1]
 
 endinWord:
         // goto endelse1
@@ -91,14 +91,14 @@ else1:
 
         // if (iInWord) goto endnotinWord;
         adr     x0, iInWord
-        ldr     x0, [x0]
-        cmp     x0, TRUE
+        ldr     w0, [x0]
+        cmp     w0, TRUE
         beq     endnotinWord
 
         // iInWord = TRUE;
-        mov     x0, TRUE
+        mov     w0, TRUE
         adr     x1, iInWord
-        str     x0, [x1]
+        str     w0, [x1]
 
 endnotinWord:
 
@@ -125,8 +125,8 @@ endloop1:
 
         // if (!iInWord) goto wordEnd;
         adr     x0, iInWord
-        ldr     x0, [x0]
-        cmp     x0, FALSE
+        ldr     w0, [x0]
+        cmp     w0, FALSE
         beq     wordEnd
 
         // lWordCount++;
