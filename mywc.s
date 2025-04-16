@@ -106,7 +106,7 @@ endelse1:
 
         // if (!(iChar == '\n')) goto newLineEnd;
         adr     x0, iChar
-        ldr     x0, [x0]
+        ldr     w0, [x0]
         cmp     w0, '\n'
         bne     newLineEnd
 
