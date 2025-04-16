@@ -46,6 +46,7 @@ iInWord:
         .equ    MAIN_STACK_BYTECOUNT, 16
          .equ    TRUE, 1
          .equ    FALSE, 0
+         .equ    EOF, -1
 
 
 
