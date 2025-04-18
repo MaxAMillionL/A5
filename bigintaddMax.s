@@ -116,10 +116,16 @@ BigInt_add:
         ldr     x0, [sp, OSUM]
         ldr     x0, [x0, LLENGTH]
         ldr     x1, [sp, LSUMLENGTH]
-        ble     x0, x1
-        str     x0, [sp, LSUMLENGTH]
+        cmp     x0, x1
+        ble     noClear
 
    // memset(oSum->aulDigits, 0, MAX_DIGITS * sizeof(unsigned long));
+        ldr     x0, [sp, OSUM]
+        ldr     x0, [x0, AULDIGITS]
+        mov     x1, 0
+        mul     x2, MAX_DIGITS, 8  // sizeof(unsigned long) is 8.
+        bl      memset
+
    noClear:
    
 
