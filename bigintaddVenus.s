@@ -218,7 +218,7 @@ endloop:
 
         // if (ulCarry != 1) goto nocarryout;
         ldr     x0, [sp, ULCARRY]
-        cmp     w0, 1
+        cmp     x0, 1
         bne     nocarryout
    
         // if (lSumLength != MAX_DIGITS) goto notmaxdigit;
@@ -235,7 +235,6 @@ endloop:
 notmaxdigit:
 
         // oSum->aulDigits[lSumLength] = 1;
-
         ldr    x0, [sp, OSUM]
         add    x0, x0, AULDIGITS
         ldr    x1, [sp, LSUMLENGTH]
@@ -245,19 +244,16 @@ notmaxdigit:
 
         // lSumLength++;
         ldr     x0, [sp, LSUMLENGTH]
-        add     x1, x1, 1
-        str     x1, x0
+        add     x0, x0, 1
+        str     x0, [sp, LSUMLENGTH]
    
 nocarryout:
 
         // oSum->lLength = lSumLength;
-
         ldr    x0, [sp, OSUM]
         add    x0, x0, lLength
         ldr    x1, [sp, LSUMLENGTH]
         str    x1, x0
-
-
       
         // return TRUE;
         ldr     x0, TRUE
