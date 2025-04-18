@@ -82,9 +82,10 @@ int BigInt_add(BigInt_T oAddend1, BigInt_T oAddend2, BigInt_T oSum)
    
       if (lSumLength != MAX_DIGITS) goto notmaxdigit;
          return FALSE;
+      notmaxdigit:
       oSum->aulDigits[lSumLength] = 1;
       lSumLength++;
-      notmaxdigit:
+      
    
 nocarryout:
    /* Set the length of the sum. */

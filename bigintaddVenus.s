@@ -108,17 +108,15 @@ BigInt_add:
         bl      BigInt_larger
         str     x0, [sp, LSUMLENGTH]
 
-        
-
-   /* Clear oSum's array if necessary. */
-   // if (oSum->lLength <= lSumLength) goto noClear;
+        // if (oSum->lLength <= lSumLength) goto noClear;
         ldr     x0, [sp, OSUM]
         ldr     x0, [x0, LLENGTH]
         ldr     x1, [sp, LSUMLENGTH]
         cmp     x0, x1
         ble     noClear
 
-   // memset(oSum->aulDigits, 0, MAX_DIGITS * sizeof(unsigned long));
+        // memset(oSum->aulDigits, 0, 
+        // MAX_DIGITS * sizeof(unsigned long));
         ldr     x0, [sp, OSUM]
         ldr     x0, [x0, AULDIGITS]
         mov     x1, 0
@@ -126,107 +124,86 @@ BigInt_add:
         bl      memset
 
 noClear:
-   
-   /* Perform the addition. */
-   
-   //ulCarry = 0;
+
+        // ulCarry = 0;
         mov     x0, 0
         str     x0, [sp, ULCARRY]
 
-
-   //lIndex = 0;
-         mov     x0, 0
+        // lIndex = 0;
+        mov     x0, 0
         str     x0, [sp, LINDEX]
+
  loop:
 
-   //if(lIndex >= lSumLength) goto endloop;!!!!!!
-       ldr     x0, [sp, LINDEX]
-       ldr     x1, [sp, ISUMLENGTH]
-       cmp     x0,  x1
-       bge     endloop
+        // if(lIndex >= lSumLength) goto endloop;
+        ldr     x0, [sp, LINDEX]
+        ldr     x1, [sp, ISUMLENGTH]
+        cmp     x0,  x1
+        bge     endloop
 
-
-
-
-      //ulSum = ulCarry;
-       ldr     x0, [sp, ULCARRY]
-        str    x0, [sp, ULSUM]
+        //ulSum = ulCarry;
+        ldr     x0, [sp, ULCARRY]
+        str     x0, [sp, ULSUM]
         
+        // ulCarry = 0;
+        mov     x0, 0
+        str     x0, [sp, ULCARRY]
 
-     // ulCarry = 0;
-      mov     x0, 0
-      str     x0, [sp, ULCARRY ]
+        // ulSum += oAddend1->aulDigits[lIndex];
 
-      ////ulSum += oAddend1->aulDigits[lIndex];
+        // if (ulSum >= oAddend1->aulDigits[lIndex]) goto nooverflow1;
 
+        // ulCarry = 1;
+        mov     x0, 1
+        str     x0, [sp, ULCARRY]
 
+nooverflow1:
 
-      if (ulSum >= oAddend1->aulDigits[lIndex])goto nooverflow1;
-      /* Check for overflow. */
+        // ulSum += oAddend2->aulDigits[lIndex];
 
-       //  ulCarry = 1;
-      mov     x0, 1
-      str     x0, [sp, ULCARRY ]
+        // if (ulSum >= oAddend2->aulDigits[lIndex]) goto nooverflow2;
 
-   nooverflow1:
+        //  ulCarry = 1;
+        mov     x0, 1
+        str     x0, [sp, ULCARRY]
 
+nooverflow2:
 
-      ulSum += oAddend2->aulDigits[lIndex];
-
-      if (ulSum >= oAddend2->aulDigits[lIndex]) goto nooverflow2;
-
-
-
-      /* Check for overflow. */
-      //  ulCarry = 1;
-      mov     x0, 1
-      str     x0, [sp, ULCARRY ]
-
-   nooverflow2:
-
-      oSum->aulDigits[lIndex] = ulSum;
+        // oSum->aulDigits[lIndex] = ulSum;
 
 
-     // lIndex++;
+        // lIndex++;
         ldr     x0, [sp, LINDEX]
         add     x1, x1, 1
-        str     x1, x0
+        str     x1, [sp, LINDEX]
 
-   goto loop;
+        // goto loop;
    
-   endloop:
+endloop:
 
-   /* Check for a carry out of the last "column" of the addition. */
-
-
-  // if (ulCarry != 1) goto nocarryout;
-
+        // if (ulCarry != 1) goto nocarryout;
         ldr     x0, [sp, ULCARRY]
         cmp     w0, 1
         bne     nocarryout
-
-
    
-   //  if (lSumLength != MAX_DIGITS) goto notmaxdigit;
-
+        // if (lSumLength != MAX_DIGITS) goto notmaxdigit;
         ldr     x0, [sp, LSUMLENGTH]
-       cmp     x0,  MAX_DIGITS
-       bne     notmaxdigit
+        cmp     x0,  MAX_DIGITS
+        bne     notmaxdigit
 
-         return FALSE;
-      oSum->aulDigits[lSumLength] = 1;
+        // return FALSE;
 
-    //  lSumLength++;
+notmaxdigit:
+
+        // oSum->aulDigits[lSumLength] = 1;
+
+        // lSumLength++;
         ldr     x0, [sp, LSUMLENGTH]
         add     x1, x1, 1
         str     x1, x0
-
-
-      notmaxdigit:
    
 nocarryout:
-   /* Set the length of the sum. */
-   oSum->lLength = lSumLength;
 
-   return TRUE;
-}
+        // oSum->lLength = lSumLength;
+
+        // return TRUE;
