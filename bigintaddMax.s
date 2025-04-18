@@ -2,18 +2,6 @@
 // bigintadd.s
 // Author: Maxwell Lloyd and Venus Dinari 
 //----------------------------------------------------------------------
-
-.section .rodata
-
-//----------------------------------------------------------------------
-
-.section .bss
-
-//----------------------------------------------------------------------
-
-.section .data
-
-//----------------------------------------------------------------------
         
 .section .text
 
@@ -31,23 +19,47 @@
         .equ    LARGER_STACK_BYTECOUNT, 32
 
         // parameters
-        LENGTH1 .req x19
-        LENGTH2 .req x20
+        LLENGTH1 .req x19
+        LLENGTH2 .req x20
 
         // local variables
-        LARGER  .req x21
+        LLARGER  .req x21
 
 larger:
-{
-   long lLarger;
-   if(lLength1 <= lLength2) goto len2large;
-      lLarger = lLength1;
-      goto len1large;
-   len2large:
-      lLarger = lLength2;
-   len1large:
-   return lLarger;
-}
+        // save all local variables and parameters
+        sub sp, sp, LARGER_STACK_BYTECOUNT
+        str x30, [sp]          // store return pointer
+        str x19, [sp, 8]       // store lLength1
+        str x20, [sp, 16]      // store lLength2
+        str x21, [sp, 24]      // store lLarger
+        mov LLENGTH1, x0       
+        mov LLENGTH2, x1
+
+        // if(lLength1 <= lLength2) goto len2large
+        cmp     LLENGTH1, LLENGTH2
+        ble     len2large
+
+        // lLarger = lLength1;
+        mov LLARGER, LLENGTH1
+
+        // goto len1large;
+        b       len1large
+        
+len2large:
+
+        // lLarger = lLength2;
+        mov LLARGER, LLENGTH2
+
+len1large:
+
+        // return lLarger;
+        ldr x30, [sp]
+        ldr x19, [sp, 8]
+        ldr x20, [sp, 16]
+        ldr x21, [sp, 24]
+        add sp, sp, LARGER_STACK_BYTECOUNT
+        ret
+
 
 //----------------------------------------------------------------------
 // Assign the sum of oAddend1 and oAddend2 to oSum.  oSum should be
@@ -57,24 +69,35 @@ larger:
 //----------------------------------------------------------------------
 
         // Must be a multiple of 16
-        .equ    LARGER_STACK_BYTECOUNT, 64
+        .equ    ADD_STACK_BYTECOUNT, 64
+        .equ    TRUE, 1
+        .equ    FALSE, 0
          
         // parameters
-        ADDEND1 .req x19
-        ADDEND2 .req x20
-        OSUM    .req x21
+        OADDEND1 .req x19
+        OADDEND2 .req x20
+        OSUM     .req x21
 
         // local variables
         CARRY   .req x22
-        lSUM    .req x23
-        INDEX   .req x24
-        lSUMLENGTH .req x25
+        ULSUM   .req x23
+        LINDEX  .req x24
+        LSUMLENGTH .req x25
 add:
+        // save all local variables and parameters
+        sub sp, sp, ADD_STACK_BYTECOUNT
+        str x30, [sp]
+        str x19, [sp, 8]
+        str x20, [sp, 16]
+        str x21, [sp, 24]
+        str x22, [sp, 32]
+        str x23, [sp, 40]
+        str x24, [sp, 48]
+        str x25, [sp, 56]
+        mov OADDEND1, x0
+        mov OADDEND2, x1
+        mov OSUM, x2
 {
-   unsigned long ulCarry;
-   unsigned long ulSum;
-   long lIndex;
-   long lSumLength;
 
    /* Determine the larger length. */
    lSumLength = BigInt_larger(oAddend1->lLength, oAddend2->lLength);
