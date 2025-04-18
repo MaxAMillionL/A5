@@ -24,6 +24,7 @@
 
         // local variables stack offsets
         .equ    LLARGER, 24
+        .global BigInt_larger
 
 BigInt_larger:
         // save parameters
@@ -79,6 +80,7 @@ len1large:
         .equ    AULDIGITS, 8
         .equ    SIZE_OF_LONG, 8
         .equ    MAX_DIGITS, 32768
+        .global BigInt_add
          
         // parameters
         .equ    OADDEND1, 8
