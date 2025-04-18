@@ -87,7 +87,7 @@ len1large:
         OSUM     .req x21
 
         // local variables
-        CARRY   .req x22
+        ULCARRY   .req x22
         ULSUM   .req x23
         LINDEX  .req x24
         LSUMLENGTH .req x25
@@ -168,7 +168,7 @@ noClear:
         add     x0, x0, AULDIGITS
         mov     x1, LINDEX
         ldr     x0, [x0, x1, lsl 3]
-        ldr     x1, [sp, ULSUM]
+        mov     x1, ULSUM
         cmp     x1, x0
         bhs     nooverflow1
 
@@ -189,7 +189,7 @@ nooverflow1:
         add     x0, x0, AULDIGITS
         mov     x1, LINDEX
         ldr     x0, [x0, x1, lsl 3]
-        ldr     x1, ULSUM
+        mov     x1, ULSUM
         cmp     x1, x0
         bhs     nooverflow2
 
@@ -248,7 +248,7 @@ notmaxdigit:
         str     x2, [x0]
 
         // lSumLength++;
-        ldr     x0, [sp, LSUMLENGTH]
+        mov     x0, LSUMLENGTH
         add     x1, x1, 1
         str     x1, x0
    
