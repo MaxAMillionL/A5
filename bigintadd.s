@@ -139,7 +139,7 @@ noClear:
         mov     x0, 0
         str     x0, [sp, LINDEX]
 
- loop:
+loop:
 
         // if(lIndex >= lSumLength) goto endloop;
         ldr     x0, [sp, LINDEX]
@@ -210,7 +210,7 @@ nooverflow2:
         lsl     x1, x1, 3
         add     x0, x0, x1
         ldr     x2, [sp, ULSUM]
-        str     x2, [x1]
+        str     x2, [x0]
         
         // lIndex++;
         ldr     x0, [sp, LINDEX]
