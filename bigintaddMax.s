@@ -83,7 +83,7 @@ len1large:
         .equ    OSUM, 24
 
         // local variables
-        .equ    CARRY, 32
+        .equ    ULCARRY, 32
         .equ    ULSUM, 40
         .equ    LINDEX, 48
         .equ    LSUMLENGTH 56
@@ -94,7 +94,7 @@ BigInt_add:
         str     x0, [sp, OADDEND1]     // store oAddend1
         str     x1, [sp, OADDEND2]     // store oAddend1
         str     x2, [sp, OSUM]         // store oSum
-        str     x3, [sp, CARRY]        // store carry
+        str     x3, [sp, ULCARRY]        // store carry
         str     x4, [sp, ULSUM]        // store ulSum
         str     x5, [sp, LINDEX]       // store lIndex
         str     x6, [sp, LSUMLENGTH]   // store lSumLength
@@ -113,7 +113,12 @@ BigInt_add:
 
    /* Clear oSum's array if necessary. */
    // if (oSum->lLength <= lSumLength) goto noClear;
-      
+        ldr     x0, [sp, OSUM]
+        ldr     x0, [x0, LLENGTH]
+        ldr     x1, [sp, LSUMLENGTH]
+        ble     x0, x1
+        str     x0, [sp, LSUMLENGTH]
+
    // memset(oSum->aulDigits, 0, MAX_DIGITS * sizeof(unsigned long));
    noClear:
    
