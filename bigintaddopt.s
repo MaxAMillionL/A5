@@ -175,7 +175,7 @@ nooverflow1:
         // if (ulSum >= oAddend2->aulDigits[lIndex]) goto nooverflow2;
 
         //  ulCarry = 1;
-        mov     ULSUM, 1
+        mov     ULCARRY, 1
 
 nooverflow2:
 
