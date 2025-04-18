@@ -150,6 +150,14 @@ noClear:
         str     x0, [sp, ULCARRY]
 
         // ulSum += oAddend1->aulDigits[lIndex];
+        ldr     x0, [sp, OADDEND1]
+        add     x0, AULDIGITS
+        ldr     x1, [sp, LINDEX]
+        ldr     x0, [x0, x1, lsl 3]
+        ldr     x1, [sp, ULSUM]
+        add     x2, x0, x1
+        str     x2, [sp, ULSUM]
+
 
         // if (ulSum >= oAddend1->aulDigits[lIndex]) goto nooverflow1;
 
@@ -160,6 +168,13 @@ noClear:
 nooverflow1:
 
         // ulSum += oAddend2->aulDigits[lIndex];
+        ldr     x0, [sp, OADDEND2]
+        add     x0, AULDIGITS
+        ldr     x1, [sp, LINDEX]
+        ldr     x0, [x0, x1, lsl 3]
+        ldr     x1, [sp, ULSUM]
+        add     x2, x0, x1
+        str     x2, [sp, ULSUM]
 
         // if (ulSum >= oAddend2->aulDigits[lIndex]) goto nooverflow2;
 
@@ -192,6 +207,10 @@ endloop:
         bne     notmaxdigit
 
         // return FALSE;
+        ldr     x0, FALSE
+        ldr     x30, [sp]
+        add     sp, sp, ADD_STACK_BYTECOUNT
+        ret
 
 notmaxdigit:
 
