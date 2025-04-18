@@ -1,21 +1,43 @@
-/*--------------------------------------------------------------------*/
-/* bigintadd.c                                                        */
-/* Author: Bob Dondero                                                */
-/*--------------------------------------------------------------------*/
+//----------------------------------------------------------------------
+// bigintadd.s
+// Author: Maxwell Lloyd and Venus Dinari 
+//----------------------------------------------------------------------
 
-#include "bigint.h"
-#include "bigintprivate.h"
-#include <string.h>
-#include <assert.h>
+.section .rodata
 
-/* In lieu of a boolean data type. */
-enum {FALSE, TRUE};
+//----------------------------------------------------------------------
 
-/*--------------------------------------------------------------------*/
+.section .bss
 
-/* Return the larger of lLength1 and lLength2. */
-/* STACK_SIZE = 8 + 8 + 8 (longs) + 8 (return addr) = 32 */
-static long BigInt_larger(long lLength1, long lLength2)
+//----------------------------------------------------------------------
+
+.section .data
+
+//----------------------------------------------------------------------
+        
+.section .text
+
+//----------------------------------------------------------------------
+// Deals with very large numbers not able to be handles by c normally.
+// Made with the purpose to translate flat c for a fibinacci sequence.
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+// Return the larger of lLength1 and lLength2.
+// static long BigInt_larger(long lLength1, long lLength2)
+//----------------------------------------------------------------------
+
+        // Must be a multiple of 16
+        .equ    LARGER_STACK_BYTECOUNT, 32
+
+        // parameters
+        LENGTH1 .req x19
+        LENGTH2 .req x20
+
+        // local variables
+        LARGER  .req x21
+
+larger:
 {
    long lLarger;
    if(lLength1 <= lLength2) goto len2large;
@@ -27,15 +49,27 @@ static long BigInt_larger(long lLength1, long lLength2)
    return lLarger;
 }
 
-/*--------------------------------------------------------------------*/
+//----------------------------------------------------------------------
+// Assign the sum of oAddend1 and oAddend2 to oSum.  oSum should be
+// distinct from oAddend1 and oAddend2.  Return 0 (FALSE) if an
+// overflow occurred, and 1 (TRUE) otherwise.
+// int BigInt_add(BigInt_T oAddend1, BigInt_T oAddend2, BigInt_T oSum)
+//----------------------------------------------------------------------
 
-/* Assign the sum of oAddend1 and oAddend2 to oSum.  oSum should be
-   distinct from oAddend1 and oAddend2.  Return 0 (FALSE) if an
-   overflow occurred, and 1 (TRUE) otherwise. */
+        // Must be a multiple of 16
+        .equ    LARGER_STACK_BYTECOUNT, 64
+         
+        // parameters
+        ADDEND1 .req x19
+        ADDEND2 .req x20
+        OSUM    .req x21
 
-   /* STACK_SIZE = 8 + 8 + 8 (pointers) + 8 + 8 + 8 + 8 (longs) + 8 
-   (return addr) = 64*/
-int BigInt_add(BigInt_T oAddend1, BigInt_T oAddend2, BigInt_T oSum)
+        // local variables
+        CARRY   .req x22
+        lSUM    .req x23
+        INDEX   .req x24
+        lSUMLENGTH .req x25
+add:
 {
    unsigned long ulCarry;
    unsigned long ulSum;
