@@ -200,22 +200,19 @@ nooverflow2:
         // oSum->aulDigits[lIndex] = ulSum;
         ldr     x0, [sp, OSUM]
         add     x0, x0, AULDIGITS
-        ldr    x1, [sp, LINDEX]
-        lsl    x1, x1, 3
-        add    x0, x0, x1
-        ldr    x2, [sp, ULSUM]
-        str    x2, x1
-
-       
+        ldr     x1, [sp, LINDEX]
+        lsl     x1, x1, 3
+        add     x0, x0, x1
+        ldr     x2, [sp, ULSUM]
+        str     x2, x1
         
         // lIndex++;
         ldr     x0, [sp, LINDEX]
-        add     x1, x1, 1
-        str     x1, [sp, LINDEX]
+        add     x0, x0, 1
+        str     x0, [sp, LINDEX]
 
         // goto loop;
-
-        b      loop
+        b       loop
    
 endloop:
 
