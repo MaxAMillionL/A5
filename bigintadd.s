@@ -205,7 +205,7 @@ nooverflow2:
         lsl     x1, x1, 3
         add     x0, x0, x1
         ldr     x2, [sp, ULSUM]
-        str     x2, x1
+        str     x2, [x1]
         
         // lIndex++;
         ldr     x0, [sp, LINDEX]
@@ -228,7 +228,7 @@ endloop:
         bne     notmaxdigit
 
         // return FALSE;
-        ldr     x0, FALSE
+        mov     x0, FALSE
         ldr     x30, [sp]
         add     sp, sp, ADD_STACK_BYTECOUNT
         ret
@@ -241,7 +241,7 @@ notmaxdigit:
         ldr    x1, [sp, LSUMLENGTH]
         lsl    x1, x1, 3
         add    x0, x0, x1
-        str    1, x0
+        str    1, [x0]
 
         // lSumLength++;
         ldr     x0, [sp, LSUMLENGTH]
@@ -254,10 +254,10 @@ nocarryout:
         ldr    x0, [sp, OSUM]
         add    x0, x0, lLength
         ldr    x1, [sp, LSUMLENGTH]
-        str    x1, x0
+        str    x1, [x0]
       
         // return TRUE;
-        ldr     x0, TRUE
+        mov     x0, TRUE
         ldr     x30, [sp]
         add     sp, sp, ADD_STACK_BYTECOUNT
         ret
