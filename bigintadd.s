@@ -80,7 +80,7 @@ len1large:
         .equ    AULDIGITS, 8
         .equ    SIZE_OF_LONG, 8
         .equ    MAX_DIGITS, 32768
-        .global BigInt_add
+        
          
         // parameters
         .equ    OADDEND1, 8
@@ -92,6 +92,7 @@ len1large:
         .equ    ULSUM, 40
         .equ    LINDEX, 48
         .equ    LSUMLENGTH, 56
+        .global BigInt_add
 
 BigInt_add:
         // save parameters
