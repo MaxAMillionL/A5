@@ -34,7 +34,7 @@ BigInt_larger:
 
         // if(lLength1 <= lLength2) goto len2large
         ldr     x0, [sp, LLENGTH1]
-        ldr     x1, [sp, LLENGTH1]
+        ldr     x1, [sp, LLENGTH2]
         cmp     x0, x1
         ble     len2large
 
