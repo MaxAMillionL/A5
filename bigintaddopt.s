@@ -118,7 +118,7 @@ BigInt_add:
         mov     x1, OADDEND2
         ldr     x0, [x0, LLENGTH]
         ldr     x1, [x1, LLENGTH]
-        bl      larger
+        bl      BigInt_larger
         mov     LSUMLENGTH, x0
 
         // if (oSum->lLength <= lSumLength) goto noClear;
