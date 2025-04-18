@@ -34,30 +34,33 @@ BigInt_larger:
         str x21, [sp, LLARGER]    // store lLarger
 
         // if(lLength1 <= lLength2) goto len2large
-        ldr     x0
-        cmp     LLENGTH1, LLENGTH2
+        ldr     x0, [sp, LLENGTH1]
+        ldr     x1, [sp, LLENGTH1]
+        cmp     x0, x1
         ble     len2large
 
         // lLarger = lLength1;
-        mov LLARGER, LLENGTH1
+        ldr     x0, [sp, LLENGTH1]
+        str     x0, [sp, LLARGER] 
 
         // goto len1large;
-        b       len1large
+        b       len1large;
         
 len2large:
 
         // lLarger = lLength2;
-        mov LLARGER, LLENGTH2
+        ldr     x0, [sp, LLENGTH2]
+        str     x0, [sp, LLARGER] 
 
 len1large:
 
         // return lLarger;
-        ldr x30, [sp]
-        ldr x19, [sp, 8]
-        ldr x20, [sp, 16]
-        ldr x21, [sp, 24]
+        ldr x0, [sp, LLARGER]
+        ldr x30 [sp]
         add sp, sp, LARGER_STACK_BYTECOUNT
         ret
+
+        .size   BigInt_larger, (. - BigInt_larger)
 
 
 //----------------------------------------------------------------------
@@ -82,7 +85,7 @@ len1large:
         ULSUM   .req x23
         LINDEX  .req x24
         LSUMLENGTH .req x25
-add:
+BigInt_add:
         // save all local variables and parameters
         sub sp, sp, ADD_STACK_BYTECOUNT
         str x30, [sp]       // store return pointer
