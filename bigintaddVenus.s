@@ -71,39 +71,32 @@ int BigInt_add(BigInt_T oAddend1, BigInt_T oAddend2, BigInt_T oSum)
    /* Perform the addition. */
    
    //ulCarry = 0;
-        mov     w0, 0
-        adr     x1, ulCarry
-        str     w0, [x1]
+        mov     x0, 0
+        str     x0, [sp, ULCARRY]
 
 
    //lIndex = 0;
-      mov     w0, 0
-      adr     x1, lIndex
-      str     w0, [x1]
-
+         mov     x0, 0
+        str     x0, [sp, LINDEX]
  loop:
 
    //if(lIndex >= lSumLength) goto endloop;!!!!!!
-       adr     x0, lIndex
-       ldr     x1, [x0]
-       adr     x0, lSumLength
-       ldr     x2, [x0]
-       cmp     x1,  x2
+       ldr     x0, [sp, LINDEX]
+       ldr     x1, [sp, ISUMLENGTH]
+       cmp     x0,  x1
        bge     endloop
 
 
 
 
       //ulSum = ulCarry;
-        adr     x0, ulCarry
-        str     w0, [x0]
-        adr     x1, iInWord
-        str     w0, [x1]
+       ldr     x0, [sp, ULCARRY]
+        str    x0, [sp, ULSUM]
+        
 
      // ulCarry = 0;
-      mov     w0, 0
-      adr     x1, ulCarry
-      str     w0, [x1]
+      mov     x0, 0
+      str     x0, [sp, ULCARRY ]
 
       ////ulSum += oAddend1->aulDigits[lIndex];
 
@@ -113,9 +106,8 @@ int BigInt_add(BigInt_T oAddend1, BigInt_T oAddend2, BigInt_T oSum)
       /* Check for overflow. */
 
        //  ulCarry = 1;
-      mov     w0, 1
-      adr     x1, ulCarry
-      str     w0, [x1]
+      mov     x0, 1
+      str     x0, [sp, ULCARRY ]
 
    nooverflow1:
 
@@ -127,10 +119,9 @@ int BigInt_add(BigInt_T oAddend1, BigInt_T oAddend2, BigInt_T oSum)
 
 
       /* Check for overflow. */
-         //  ulCarry = 1;
-      mov     w0, 1
-      adr     x1, ulCarry
-      str     w0, [x1]
+      //  ulCarry = 1;
+      mov     x0, 1
+      str     x0, [sp, ULCARRY ]
 
    nooverflow2:
 
@@ -161,19 +152,17 @@ int BigInt_add(BigInt_T oAddend1, BigInt_T oAddend2, BigInt_T oSum)
    
    //  if (lSumLength != MAX_DIGITS) goto notmaxdigit;
 
-       adr     x0, lSumLength
-       ldr     x1, [x0]
-       cmp     x1,  MAX_DIGITS
+        ldr     x0, [sp, LSUMLENGTH]
+       cmp     x0,  MAX_DIGITS
        bne     notmaxdigit
 
          return FALSE;
       oSum->aulDigits[lSumLength] = 1;
 
     //  lSumLength++;
-        adr     x0, lSumLength
-        ldr     x1, [x0]
+        ldr     x0, [sp, LSUMLENGTH]
         add     x1, x1, 1
-        str     x1, [x0]
+        str     x1, x0
 
       notmaxdigit:
    
