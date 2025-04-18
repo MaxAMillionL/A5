@@ -29,9 +29,9 @@ BigInt_larger:
         // save all local variables and parameters
         sub sp, sp, LARGER_STACK_BYTECOUNT
         str x30, [sp]             // store return pointer
-        str x19, [sp, LLENGTH1]   // store lLength1
-        str x20, [sp, LLENGTH2]   // store lLength2
-        str x21, [sp, LLARGER]    // store lLarger
+        str x0,  [sp, LLENGTH1]   // store lLength1
+        str x1,  [sp, LLENGTH2]   // store lLength2
+        str x2,  [sp, LLARGER]    // store lLarger
 
         // if(lLength1 <= lLength2) goto len2large
         ldr     x0, [sp, LLENGTH1]
