@@ -120,7 +120,7 @@ BigInt_add:
         bl      larger
         mov     LSUMLENGTH, x0
 
-       // if (oSum->lLength <= lSumLength) goto noClear;
+        // if (oSum->lLength <= lSumLength) goto noClear;
         mov     x0, OSUM
         ldr     x0, [x0, LLENGTH]
         mov     x1, LSUMLENGTH
@@ -164,6 +164,13 @@ noClear:
 
 
         // if (ulSum >= oAddend1->aulDigits[lIndex]) goto nooverflow1;
+        mov     x0, OADDEND1
+        add     x0, x0, AULDIGITS
+        mov     x1, LINDEX
+        ldr     x0, [x0, x1, lsl 3]
+        ldr     x1, [sp, ULSUM]
+        cmp     x1, x0
+        bhs     nooverflow1
 
         // ulCarry = 1;
         mov     ULSUM, 1
@@ -178,6 +185,13 @@ nooverflow1:
         add     ULSUM, ULSUM, x0
 
         // if (ulSum >= oAddend2->aulDigits[lIndex]) goto nooverflow2;
+        mov     x0, OADDEND2
+        add     x0, x0, AULDIGITS
+        mov     x1, LINDEX
+        ldr     x0, [x0, x1, lsl 3]
+        ldr     x1, [sp, ULSUM]
+        cmp     x1, x0
+        bhs     nooverflow2
 
         //  ulCarry = 1;
         mov     ULCARRY, 1
