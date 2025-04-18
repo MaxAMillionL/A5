@@ -18,23 +18,25 @@
         // Must be a multiple of 16
         .equ    LARGER_STACK_BYTECOUNT, 32
 
-        // parameters stack offsets
-        .equ    LLENGTH1, 8
-        .equ    LLENGTH2, 16
+        // parameters
+        LLENGTH1 .req x19
+        LLENGTH2 .req x20
 
-        // local variables stack offsets
-        .equ    LLARGER, 24
+        // local variables
+        LLARGER  .req x21
 
 BigInt_larger:
         // save all local variables and parameters
         sub sp, sp, LARGER_STACK_BYTECOUNT
-        str x30, [sp]             // store return pointer
-        str x19, [sp, LLENGTH1]   // store lLength1
-        str x20, [sp, LLENGTH2]   // store lLength2
-        str x21, [sp, LLARGER]    // store lLarger
+        str x30, [sp]          // store return pointer
+        str x19, [sp, 8]       // store lLength1
+        str x20, [sp, 16]      // store lLength2
+        str x21, [sp, 24]      // store lLarger
+        mov LLENGTH1, x0       
+        mov LLENGTH2, x1
 
         // if(lLength1 <= lLength2) goto len2large
-        ldr     x0
+        
         cmp     LLENGTH1, LLENGTH2
         ble     len2large
 
@@ -71,6 +73,8 @@ len1large:
         .equ    ADD_STACK_BYTECOUNT, 64
         .equ    TRUE, 1
         .equ    FALSE, 0
+        .equ    LLENGTH, 0
+        .equ    AULDIGITS, 8
          
         // parameters
         OADDEND1 .req x19
@@ -101,6 +105,8 @@ add:
         // lSumLength = BigInt_larger(oAddend1->lLength, oAddend2->lLength);
         mov x0, OADDEND1
         mov x1, OADDEND2
+        ldr x0, [x0, LLENGTH]
+        ldr x1, [x1, LLENGTH]
         bl  larger
         mov LSUMLENGTH, x0
 
