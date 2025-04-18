@@ -1,72 +1,131 @@
-/*--------------------------------------------------------------------*/
-/* bigintadd.c                                                        */
-/* Author: Bob Dondero                                                */
-/*--------------------------------------------------------------------*/
+//----------------------------------------------------------------------
+// bigintadd.s
+// Author: Maxwell Lloyd and Venus Dinari 
+//----------------------------------------------------------------------
+        
+.section .text
 
-#include "bigint.h"
-#include "bigintprivate.h"
-#include <string.h>
-#include <assert.h>
+//----------------------------------------------------------------------
+// Deals with very large numbers not able to be handles by c normally.
+// Made with the purpose to translate flat c for a fibinacci sequence.
+//----------------------------------------------------------------------
 
-/* In lieu of a boolean data type. */
-enum {FALSE, TRUE};
+//----------------------------------------------------------------------
+// Return the larger of lLength1 and lLength2.
+// static long BigInt_larger(long lLength1, long lLength2)
+//----------------------------------------------------------------------
 
-/*--------------------------------------------------------------------*/
+        // Must be a multiple of 16
+        .equ    LARGER_STACK_BYTECOUNT, 32
 
-/* Return the larger of lLength1 and lLength2. */
-/* STACK_SIZE = 8 + 8 + 8 (longs) + 8 (return addr) = 32 */
-static long BigInt_larger(long lLength1, long lLength2)
-{
-   long lLarger;
-   if(lLength1 <= lLength2) goto len2large;
-      lLarger = lLength1;
-      goto len1large;
-   len2large:
-      lLarger = lLength2;
-   len1large:
-   return lLarger;
-}
+        // parameters stack offsets
+        .equ    LLENGTH1, 8
+        .equ    LLENGTH2, 16
 
-/*--------------------------------------------------------------------*/
+        // local variables stack offsets
+        .equ    LLARGER, 24
 
-/* Assign the sum of oAddend1 and oAddend2 to oSum.  oSum should be
-   distinct from oAddend1 and oAddend2.  Return 0 (FALSE) if an
-   overflow occurred, and 1 (TRUE) otherwise. */
+BigInt_larger:
+        // save parameters
+        sub sp, sp, LARGER_STACK_BYTECOUNT
+        str x30, [sp]             // store return pointer
+        str x0,  [sp, LLENGTH1]   // store lLength1
+        str x1,  [sp, LLENGTH2]   // store lLength2
 
-   /* STACK_SIZE = 8 + 8 + 8 (pointers) + 8 + 8 + 8 + 8 (longs) + 8 
-   (return addr) = 64*/
-int BigInt_add(BigInt_T oAddend1, BigInt_T oAddend2, BigInt_T oSum)
-{
-   unsigned long ulCarry;
-   unsigned long ulSum;
-   long lIndex;
-   long lSumLength;
+        // if(lLength1 <= lLength2) goto len2large
+        ldr     x0, [sp, LLENGTH1]
+        ldr     x1, [sp, LLENGTH1]
+        cmp     x0, x1
+        ble     len2large
 
-   /* Determine the larger length. */
-   lSumLength = BigInt_larger(oAddend1->lLength, oAddend2->lLength);
+        // lLarger = lLength1;
+        ldr     x0, [sp, LLENGTH1]
+        str     x0, [sp, LLARGER] 
+
+        // goto len1large;
+        b       len1large;
+        
+len2large:
+
+        // lLarger = lLength2;
+        ldr     x0, [sp, LLENGTH2]
+        str     x0, [sp, LLARGER] 
+
+len1large:
+
+        // return lLarger;
+        ldr     x0, [sp, LLARGER]
+        ldr     x30 [sp]
+        add     sp, sp, LARGER_STACK_BYTECOUNT
+        ret
+
+        .size   BigInt_larger, (. - BigInt_larger)
+
+
+//----------------------------------------------------------------------
+// Assign the sum of oAddend1 and oAddend2 to oSum.  oSum should be
+// distinct from oAddend1 and oAddend2.  Return 0 (FALSE) if an
+// overflow occurred, and 1 (TRUE) otherwise.
+// int BigInt_add(BigInt_T oAddend1, BigInt_T oAddend2, BigInt_T oSum)
+//----------------------------------------------------------------------
+
+        // Must be a multiple of 16
+        .equ    ADD_STACK_BYTECOUNT, 64
+
+        // constants
+        .equ    TRUE, 1
+        .equ    FALSE, 0
+        .equ    LLENGTH, 0
+        .equ    AULDIGITS, 8
+        .equ    SIZE_OF_LONG, 8
+         
+        // parameters
+        .equ    OADDEND1, 8
+        .equ    OADDEND2, 16
+        .equ    OSUM, 24
+
+        // local variables
+        .equ    ULCARRY, 32
+        .equ    ULSUM, 40
+        .equ    LINDEX, 48
+        .equ    LSUMLENGTH 56
+
+BigInt_add:
+        // save parameters
+        sub sp, sp, ADD_STACK_BYTECOUNT
+        str     x30, [sp]              // store return pointer
+        str     x0, [sp, OADDEND1]     // store oAddend1
+        str     x1, [sp, OADDEND2]     // store oAddend1
+        str     x2, [sp, OSUM]         // store oSum
+
+        // Determine the larger length
+        // lSumLength = BigInt_larger
+        // (oAddend1->lLength, oAddend2->lLength);
+        ldr     x0, [sp, OADDEND1]
+        ldr     x0, [x0, LLENGTH]
+        ldr     x1, [sp, OADDEND2]
+        ldr     x1, [x1, LLENGTH]
+        bl      BigInt_larger
+        str     x0, [sp, LSUMLENGTH]
+
+        
 
    /* Clear oSum's array if necessary. */
-   if (oSum->lLength <= lSumLength) goto noClear;
-      memset(oSum->aulDigits, 0, MAX_DIGITS * sizeof(unsigned long));
-   noClear:
-   
+   // if (oSum->lLength <= lSumLength) goto noClear;
+        ldr     x0, [sp, OSUM]
+        ldr     x0, [x0, LLENGTH]
+        ldr     x1, [sp, LSUMLENGTH]
+        cmp     x0, x1
+        ble     noClear
 
+   // memset(oSum->aulDigits, 0, MAX_DIGITS * sizeof(unsigned long));
+        ldr     x0, [sp, OSUM]
+        ldr     x0, [x0, AULDIGITS]
+        mov     x1, 0
+        mul     x2, MAX_DIGITS, SIZE_OF_LONG
+        bl      memset
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+noClear:
    
    /* Perform the addition. */
    
