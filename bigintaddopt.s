@@ -199,7 +199,13 @@ nooverflow1:
 nooverflow2:
 
         // oSum->aulDigits[lIndex] = ulSum;
-
+        mov     x0, OSUM
+        add     x0, x0, AULDIGITS
+        mov     x1, LINDEX
+        lsl     x1, x1, 3
+        add     x0, x0, x1
+        mov     x2, ULSUM
+        str     x2, [x0]
 
         // lIndex++;
         add     LINDEX, LINDEX, 1
@@ -233,6 +239,13 @@ endloop:
 notmaxdigit:
 
         // oSum->aulDigits[lSumLength] = 1;
+        mov     x0, OSUM
+        add     x0, x0, AULDIGITS
+        mov     x1, LSUMLENGTH
+        lsl     x1, x1, 3
+        add     x0, x0, x1
+        mov     x2, 1
+        str     x2, [x0]
 
         // lSumLength++;
         ldr     x0, [sp, LSUMLENGTH]
@@ -242,6 +255,10 @@ notmaxdigit:
 nocarryout:
 
         // oSum->lLength = lSumLength;
+        mov    x0, OSUM
+        add    x0, x0, LLENGTH
+        mov    x1, LSUMLENGTH
+        str    x1, [x0]
 
         // return TRUE;
         ldr     x0, FALSE
