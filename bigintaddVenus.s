@@ -151,7 +151,7 @@ noClear:
 
         // ulSum += oAddend1->aulDigits[lIndex];
         ldr     x0, [sp, OADDEND1]
-        add     x0, AULDIGITS
+        add     x0, x0, AULDIGITS
         ldr     x1, [sp, LINDEX]
         ldr     x0, [x0, x1, lsl 3]
         ldr     x1, [sp, ULSUM]
@@ -160,6 +160,12 @@ noClear:
 
 
         // if (ulSum >= oAddend1->aulDigits[lIndex]) goto nooverflow1;
+        ldr    x0, [sp, OADDEND1]
+        add    x0, x0, AULDIGITS
+        ldr    x1, [sp, LINDEX]
+        ldr    x0, [x0, x1, lsl 3]
+
+
 
         // ulCarry = 1;
         mov     x0, 1
@@ -185,6 +191,8 @@ nooverflow1:
 nooverflow2:
 
         // oSum->aulDigits[lIndex] = ulSum;
+        ldr     x0, [sp, OSUM]
+        add     x0, AULDIGITS
 
 
         // lIndex++;
