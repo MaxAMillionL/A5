@@ -132,7 +132,9 @@ BigInt_add:
         mov     x0, OSUM
         add     x0, x0, AULDIGITS
         mov     x1, 0
-        mul     x2, MAX_DIGITS, SIZE_OF_LONG
+        mov     x3, SIZE_OF_LONG
+        mov     x4, MAX_DIGITS
+        mul     x2, x4, x3
         bl      memset
 
 noClear:
