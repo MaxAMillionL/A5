@@ -175,7 +175,7 @@ nooverflow1:
 
         // ulSum += oAddend2->aulDigits[lIndex];
         ldr     x0, [sp, OADDEND2]
-        add     x0, AULDIGITS
+        add     x0, x0, AULDIGITS
         ldr     x1, [sp, LINDEX]
         ldr     x0, [x0, x1, lsl 3]
         ldr     x1, [sp, ULSUM]
