@@ -250,10 +250,8 @@ notmaxdigit:
         str     x2, [x0]
 
         // lSumLength++;
-        mov     x0, LSUMLENGTH
-        add     x1, x1, 1
-        str     x1, x0
-   
+        add     LSUMLENGTH, LSUMLENGTH, 1
+
 nocarryout:
 
         // oSum->lLength = lSumLength;
