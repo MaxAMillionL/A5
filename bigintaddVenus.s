@@ -95,7 +95,7 @@ BigInt_add:
         sub sp, sp, ADD_STACK_BYTECOUNT
         str     x30, [sp]              // store return pointer
         str     x0, [sp, OADDEND1]     // store oAddend1
-        str     x1, [sp, OADDEND2]     // store oAddend1
+        str     x1, [sp, OADDEND2]     // store oAddend2
         str     x2, [sp, OSUM]         // store oSum
 
         // Determine the larger length
