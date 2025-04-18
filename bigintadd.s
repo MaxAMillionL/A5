@@ -121,7 +121,7 @@ BigInt_add:
         add     x0, x0, AULDIGITS
         mov     x1, 0
         mov     x3, SIZE_OF_LONG
-        mul     x2, MAX_DIGITS, SIZE_OF_LONG
+        mul     x2, MAX_DIGITS, x3
         bl      memset
 
 noClear:
@@ -241,7 +241,8 @@ notmaxdigit:
         ldr    x1, [sp, LSUMLENGTH]
         lsl    x1, x1, 3
         add    x0, x0, x1
-        str    1, [x0]
+        mov    x2, 1
+        str    x2, [x0]
 
         // lSumLength++;
         ldr     x0, [sp, LSUMLENGTH]
