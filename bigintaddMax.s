@@ -26,12 +26,11 @@
         .equ    LLARGER, 24
 
 BigInt_larger:
-        // save all local variables and parameters
+        // save parameters
         sub sp, sp, LARGER_STACK_BYTECOUNT
         str x30, [sp]             // store return pointer
         str x0,  [sp, LLENGTH1]   // store lLength1
         str x1,  [sp, LLENGTH2]   // store lLength2
-        str x2,  [sp, LLARGER]    // store lLarger
 
         // if(lLength1 <= lLength2) goto len2large
         ldr     x0, [sp, LLENGTH1]
@@ -55,9 +54,9 @@ len2large:
 len1large:
 
         // return lLarger;
-        ldr x0, [sp, LLARGER]
-        ldr x30 [sp]
-        add sp, sp, LARGER_STACK_BYTECOUNT
+        ldr     x0, [sp, LLARGER]
+        ldr     x30 [sp]
+        add     sp, sp, LARGER_STACK_BYTECOUNT
         ret
 
         .size   BigInt_larger, (. - BigInt_larger)
@@ -72,10 +71,13 @@ len1large:
 
         // Must be a multiple of 16
         .equ    ADD_STACK_BYTECOUNT, 64
+
+        // constants
         .equ    TRUE, 1
         .equ    FALSE, 0
         .equ    LLENGTH, 0
         .equ    AULDIGITS, 8
+        .equ    SIZE_OF_LONG, 8
          
         // parameters
         .equ    OADDEND1, 8
@@ -83,21 +85,18 @@ len1large:
         .equ    OSUM, 24
 
         // local variables
-        .equ    CARRY, 32
+        .equ    ULCARRY, 32
         .equ    ULSUM, 40
         .equ    LINDEX, 48
         .equ    LSUMLENGTH 56
+
 BigInt_add:
-        // save all local variables and parameters
+        // save parameters
         sub sp, sp, ADD_STACK_BYTECOUNT
         str     x30, [sp]              // store return pointer
         str     x0, [sp, OADDEND1]     // store oAddend1
         str     x1, [sp, OADDEND2]     // store oAddend1
         str     x2, [sp, OSUM]         // store oSum
-        str     x3, [sp, CARRY]        // store carry
-        str     x4, [sp, ULSUM]        // store ulSum
-        str     x5, [sp, LINDEX]       // store lIndex
-        str     x6, [sp, LSUMLENGTH]   // store lSumLength
 
         // Determine the larger length
         // lSumLength = BigInt_larger
@@ -105,7 +104,7 @@ BigInt_add:
         ldr     x0, [sp, OADDEND1]
         ldr     x0, [x0, LLENGTH]
         ldr     x1, [sp, OADDEND2]
-        ldr     x1, [sp, LLENGTH]
+        ldr     x1, [x1, LLENGTH]
         bl      BigInt_larger
         str     x0, [sp, LSUMLENGTH]
 
@@ -113,8 +112,19 @@ BigInt_add:
 
    /* Clear oSum's array if necessary. */
    // if (oSum->lLength <= lSumLength) goto noClear;
-      
+        ldr     x0, [sp, OSUM]
+        ldr     x0, [x0, LLENGTH]
+        ldr     x1, [sp, LSUMLENGTH]
+        cmp     x0, x1
+        ble     noClear
+
    // memset(oSum->aulDigits, 0, MAX_DIGITS * sizeof(unsigned long));
+        ldr     x0, [sp, OSUM]
+        ldr     x0, [x0, AULDIGITS]
+        mov     x1, 0
+        mul     x2, MAX_DIGITS, SIZE_OF_LONG
+        bl      memset
+
    noClear:
    
 
