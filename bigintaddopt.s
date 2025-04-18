@@ -25,6 +25,8 @@
         // local variables
         LLARGER  .req x21
 
+        .global BigInt_larger
+
 BigInt_larger:
 
         // save all local variables and parameters
@@ -77,6 +79,7 @@ len1large:
         .equ    FALSE, 0
         .equ    LLENGTH, 0
         .equ    AULDIGITS, 8
+        .equ    MAX_DIGITS, 32768
          
         // parameters
         OADDEND1 .req x19
@@ -88,6 +91,8 @@ len1large:
         ULSUM   .req x23
         LINDEX  .req x24
         LSUMLENGTH .req x25
+
+        .global BigInt_add
 
 BigInt_add:
 
