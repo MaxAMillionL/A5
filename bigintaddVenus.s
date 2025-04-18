@@ -158,18 +158,14 @@ noClear:
         add     x2, x0, x1
         str     x2, [sp, ULSUM]
 
-
         // if (ulSum >= oAddend1->aulDigits[lIndex]) goto nooverflow1;
         ldr    x0, [sp, OADDEND1]
         add    x0, x0, AULDIGITS
         ldr    x1, [sp, LINDEX]
         ldr    x0, [x0, x1, lsl 3]
-        ldr     x1, [sp, ULSUM]
-        cmp    x0, x1 
-        bhs     nooverflow1
-
-
-
+        ldr    x1, [sp, ULSUM]
+        cmp    x1, x0
+        bhs    nooverflow1
 
         // ulCarry = 1;
         mov     x0, 1
