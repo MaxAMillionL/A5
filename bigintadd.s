@@ -78,6 +78,7 @@ len1large:
         .equ    LLENGTH, 0
         .equ    AULDIGITS, 8
         .equ    SIZE_OF_LONG, 8
+        .eq     MAX_DIGITS, 32768
          
         // parameters
         .equ    OADDEND1, 8
