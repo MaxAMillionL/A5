@@ -139,7 +139,7 @@ noClear:
 
         // if(lIndex >= lSumLength) goto endloop;
         ldr     x0, [sp, LINDEX]
-        ldr     x1, [sp, ISUMLENGTH]
+        ldr     x1, [sp, LSUMLENGTH]
         cmp     x0,  x1
         bge     endloop
 
@@ -254,7 +254,7 @@ nocarryout:
 
         // oSum->lLength = lSumLength;
         ldr    x0, [sp, OSUM]
-        add    x0, x0, lLength
+        add    x0, x0, LLENGTH
         ldr    x1, [sp, LSUMLENGTH]
         str    x1, [x0]
       
