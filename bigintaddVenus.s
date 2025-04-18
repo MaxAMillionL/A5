@@ -188,10 +188,9 @@ noClear:
 
 
      // lIndex++;
-        adr     x0, lIndex
-        ldr     x1, [x0]
+        ldr     x0, [sp, LINDEX]
         add     x1, x1, 1
-        str     x1, [x0]
+        str     x1, x0
 
    goto loop;
    
@@ -202,8 +201,7 @@ noClear:
 
   // if (ulCarry != 1) goto nocarryout;
 
-        adr     x0, ulCarry
-        ldr     w0, [x0]
+        ldr     x0, [sp, ULCARRY]
         cmp     w0, 1
         bne     nocarryout
 
@@ -222,6 +220,7 @@ noClear:
         ldr     x0, [sp, LSUMLENGTH]
         add     x1, x1, 1
         str     x1, x0
+
 
       notmaxdigit:
    
