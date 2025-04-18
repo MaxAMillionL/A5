@@ -55,7 +55,7 @@ len1large:
 
         // return lLarger;
         ldr     x0, [sp, LLARGER]
-        ldr     x30 [sp]
+        ldr     x30, [sp]
         add     sp, sp, LARGER_STACK_BYTECOUNT
         ret
 
@@ -88,7 +88,7 @@ len1large:
         .equ    ULCARRY, 32
         .equ    ULSUM, 40
         .equ    LINDEX, 48
-        .equ    LSUMLENGTH 56
+        .equ    LSUMLENGTH, 56
 
 BigInt_add:
         // save parameters
@@ -120,6 +120,7 @@ BigInt_add:
         ldr     x0, [sp, OSUM]
         add     x0, x0, AULDIGITS
         mov     x1, 0
+        mov     x3, SIZE_OF_LONG
         mul     x2, MAX_DIGITS, SIZE_OF_LONG
         bl      memset
 
