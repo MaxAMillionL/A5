@@ -64,7 +64,7 @@ BigInt_add:
         ldr     x0, [x0, LLENGTH]
         ldr     x1, [x1, LLENGTH]
         cmp     x0, x1
-        bgt     goto l1
+        bgt     l1
         mov     LSUMLENGTH, x1
         b       fin
 l1:
