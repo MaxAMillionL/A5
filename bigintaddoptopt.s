@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------
-// bigintaddoptopt.s
+// bigintaddopt.s
 // Author: Maxwell Lloyd and Venus Dinari 
 //----------------------------------------------------------------------
         
@@ -7,8 +7,9 @@
 
 //----------------------------------------------------------------------
 // Deals with very large numbers not able to be handles by c normally.
-// Made with the purpose to beat the compiler
+// Made with the purpose to optimize flat c for a fibinacci sequence.
 //----------------------------------------------------------------------
+
 
 //----------------------------------------------------------------------
 // Assign the sum of oAddend1 and oAddend2 to oSum.  oSum should be
@@ -62,26 +63,13 @@ BigInt_add:
         mov     x1, OADDEND2
         ldr     x0, [x0, LLENGTH]
         ldr     x1, [x1, LLENGTH]
-
-BigInt_larger:
-        // if(lLength1 <= lLength2) goto len2large
         cmp     x0, x1
-        ble     len2large
-
-        // lLarger = lLength1;
-        mov     x3, x0
-
-        // goto len1large;
-        b       len1large
-        
-len2large:
-
-        // lLarger = lLength2;
-        mov x3, x1
-
-len1large:
-
-        mov     LSUMLENGTH, x3
+        bgt     goto l1
+        mov     LSUMLENGTH, x1
+        b       fin
+l1:
+        mov     LSUMLENGTH, x0
+fin:
 
         // if (oSum->lLength <= lSumLength) goto noClear;
         mov     x0, OSUM
@@ -138,7 +126,7 @@ noClear:
         bhs     nooverflow1
 
         // ulCarry = 1;
-        mov     ULSUM, 1
+        mov     ULCARRY, 1
 
 nooverflow1:
 
@@ -189,7 +177,7 @@ endloop:
         bne     notmaxdigit
 
         // return FALSE;
-        ldr     x0, FALSE
+        mov     x0, FALSE
         ldr     x30, [sp]
         ldr     x19, [sp, 8]    // store oAddend1
         ldr     x20, [sp, 16]   // store oAddend1
@@ -224,7 +212,7 @@ nocarryout:
         str    x1, [x0]
 
         // return TRUE;
-        ldr     x0, FALSE
+        mov     x0, TRUE
         ldr     x30, [sp]
         ldr     x19, [sp, 8]    // store oAddend1
         ldr     x20, [sp, 16]   // store oAddend1
