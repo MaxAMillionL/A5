@@ -19,7 +19,7 @@
 //----------------------------------------------------------------------
 
         // Must be a multiple of 16
-        .equ    ADD_STACK_BYTECOUNT, 64
+        .equ    ADD_STACK_BYTECOUNT, 16
         .equ    TRUE, 1
         .equ    FALSE, 0
         .equ    LLENGTH, 0
@@ -28,15 +28,15 @@
         .equ    MAX_DIGITS, 32768
          
         // parameters
-        OADDEND1 .req x19
-        OADDEND2 .req x20
-        OSUM     .req x21
+        OADDEND1 .req x9
+        OADDEND2 .req x10
+        OSUM     .req x11
 
         // local variables
-        ULCARRY   .req x22
-        ULSUM   .req x23
-        LINDEX  .req x24
-        LSUMLENGTH .req x25
+        ULCARRY   .req x12
+        ULSUM   .req x13
+        LINDEX  .req x14
+        LSUMLENGTH .req x15
 
         .global BigInt_add
 
@@ -45,13 +45,6 @@ BigInt_add:
         // save all local variables and parameters
         sub     sp, sp, ADD_STACK_BYTECOUNT
         str     x30, [sp]       // store return pointer
-        str     x19, [sp, 8]    // store oAddend1
-        str     x20, [sp, 16]   // store oAddend1
-        str     x21, [sp, 24]   // store oSum
-        str     x22, [sp, 32]   // store carry
-        str     x23, [sp, 40]   // store ulSum
-        str     x24, [sp, 48]   // store lIndex
-        str     x25, [sp, 56]   // store lSumLength
         mov     OADDEND1, x0    
         mov     OADDEND2, x1
         mov     OSUM, x2
@@ -180,13 +173,6 @@ endloop:
         // return FALSE;
         mov     x0, FALSE
         ldr     x30, [sp]
-        ldr     x19, [sp, 8]    // store oAddend1
-        ldr     x20, [sp, 16]   // store oAddend1
-        ldr     x21, [sp, 24]   // store oSum
-        ldr     x22, [sp, 32]   // store carry
-        ldr     x23, [sp, 40]   // store ulSum
-        ldr     x24, [sp, 48]   // store lIndex
-        ldr     x25, [sp, 56]   // store lSumLength
         add     sp, sp, ADD_STACK_BYTECOUNT
         ret
 
@@ -215,13 +201,6 @@ nocarryout:
         // return TRUE;
         mov     x0, TRUE
         ldr     x30, [sp]
-        ldr     x19, [sp, 8]    // store oAddend1
-        ldr     x20, [sp, 16]   // store oAddend1
-        ldr     x21, [sp, 24]   // store oSum
-        ldr     x22, [sp, 32]   // store carry
-        ldr     x23, [sp, 40]   // store ulSum
-        ldr     x24, [sp, 48]   // store lIndex
-        ldr     x25, [sp, 56]   // store lSumLength
         add     sp, sp, ADD_STACK_BYTECOUNT
         ret
 
