@@ -11,62 +11,6 @@
 //----------------------------------------------------------------------
 
 //----------------------------------------------------------------------
-// Return the larger of lLength1 and lLength2.
-// static long BigInt_larger(long lLength1, long lLength2)
-//----------------------------------------------------------------------
-
-        // Must be a multiple of 16
-        .equ    LARGER_STACK_BYTECOUNT, 32
-
-        // parameters
-        LLENGTH1 .req x19
-        LLENGTH2 .req x20
-
-        // local variables
-        LLARGER  .req x21
-
-        .global BigInt_larger
-
-BigInt_larger:
-
-        // save all local variables and parameters
-        sub     sp, sp, LARGER_STACK_BYTECOUNT
-        str     x30, [sp]          // store return pointer
-        str     x19, [sp, 8]       // store lLength1
-        str     x20, [sp, 16]      // store lLength2
-        str     x21, [sp, 24]      // store lLarger
-        mov     LLENGTH1, x0       
-        mov     LLENGTH2, x1
-
-        // if(lLength1 <= lLength2) goto len2large
-        cmp     LLENGTH1, LLENGTH2
-        ble     len2large
-
-        // lLarger = lLength1;
-        mov     LLARGER, LLENGTH1
-
-        // goto len1large;
-        b       len1large
-        
-len2large:
-
-        // lLarger = lLength2;
-        mov LLARGER, LLENGTH2
-
-len1large:
-
-        // return lLarger;
-        ldr x30, [sp]
-        ldr x19, [sp, 8]
-        ldr x20, [sp, 16]
-        ldr x21, [sp, 24]
-        add sp, sp, LARGER_STACK_BYTECOUNT
-        ret
-
-        .size   BigInt_larger, (. - BigInt_larger)
-
-
-//----------------------------------------------------------------------
 // Assign the sum of oAddend1 and oAddend2 to oSum.  oSum should be
 // distinct from oAddend1 and oAddend2.  Return 0 (FALSE) if an
 // overflow occurred, and 1 (TRUE) otherwise.
@@ -120,12 +64,6 @@ BigInt_add:
         ldr     x0, [x0, LLENGTH]
         ldr     x1, [x1, LLENGTH]
 
-
-
-
-
-
-
 BigInt_larger:
         // save all local variables and parameters
         mov     LLENGTH1, x0       
@@ -148,24 +86,7 @@ len2large:
 
 len1large:
 
-        // return lLarger;
-        ldr x30, [sp]
-        ldr x19, [sp, 8]
-        ldr x20, [sp, 16]
-        ldr x21, [sp, 24]
-        add sp, sp, LARGER_STACK_BYTECOUNT
-        ret
-
-        .size   BigInt_larger, (. - BigInt_larger)
-
-
-
-
-
-
-
-
-        mov     LSUMLENGTH, x0
+        mov     LSUMLENGTH, LLARGER
 
         // if (oSum->lLength <= lSumLength) goto noClear;
         mov     x0, OSUM
