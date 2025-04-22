@@ -51,7 +51,7 @@ BigInt_larger:
 len2large:
 
         // lLarger = lLength2;
-        mov LLARGER, LLENGTH2
+        mov     LLARGER, LLENGTH2
 
 len1large:
 
@@ -177,7 +177,7 @@ noClear:
         bhs     nooverflow1
 
         // ulCarry = 1;
-        mov     ULSUM, 1
+        mov     ULCARRY, 1
 
 nooverflow1:
 
