@@ -55,7 +55,8 @@ len2large:
 
 len1large:
 
-        // return lLarger;
+        // return lLarger and epilogue;
+        mov x0, LLARGER
         ldr x30, [sp]
         ldr x19, [sp, 8]
         ldr x20, [sp, 16]
@@ -227,7 +228,7 @@ endloop:
         bne     notmaxdigit
 
         // return FALSE;
-        ldr     x0, FALSE
+        mov     x0, FALSE
         ldr     x30, [sp]
         ldr     x19, [sp, 8]    // store oAddend1
         ldr     x20, [sp, 16]   // store oAddend1
@@ -262,7 +263,7 @@ nocarryout:
         str    x1, [x0]
 
         // return TRUE;
-        ldr     x0, FALSE
+        mov     x0, TRUE
         ldr     x30, [sp]
         ldr     x19, [sp, 8]    // store oAddend1
         ldr     x20, [sp, 16]   // store oAddend1
