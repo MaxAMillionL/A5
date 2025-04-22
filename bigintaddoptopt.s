@@ -47,7 +47,6 @@ BigInt_add:
         str     x19, [sp, 8]    // store oAddend1
         str     x20, [sp, 16]   // store oAddend1
         str     x21, [sp, 24]   // store oSum
-        str     x22, [sp, 32]   // store carry
         str     x23, [sp, 40]   // store ulSum
         str     x24, [sp, 48]   // store lIndex
         str     x25, [sp, 56]   // store lSumLength
@@ -117,6 +116,7 @@ nocarry:
         add     x0, x0, AULDIGITS
         mov     x1, LINDEX
         ldr     x0, [x0, x1, lsl 3]
+        
         bcs     addnoc
         adcs    ULSUM, ULSUM, x0
         b       addwithc
@@ -190,7 +190,6 @@ nocarryout:
         ldr     x19, [sp, 8]    // store oAddend1
         ldr     x20, [sp, 16]   // store oAddend1
         ldr     x21, [sp, 24]   // store oSum
-        ldr     x22, [sp, 32]   // store carry
         ldr     x23, [sp, 40]   // store ulSum
         ldr     x24, [sp, 48]   // store lIndex
         ldr     x25, [sp, 56]   // store lSumLength
