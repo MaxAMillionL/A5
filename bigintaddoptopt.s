@@ -117,7 +117,12 @@ nocarry:
         add     x0, x0, AULDIGITS
         mov     x1, LINDEX
         ldr     x0, [x0, x1, lsl 3]
+        bcs     addnoc
         adcs    ULSUM, ULSUM, x0
+        b       addwithc
+addnoc:
+        add     ULSUM, ULSUM, x0
+addwithc:
 
         // oSum->aulDigits[lIndex] = ulSum;
         mov     x0, OSUM
