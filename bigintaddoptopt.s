@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------
-// bigintaddopt.s
+// bigintaddoptopt.s
 // Author: Maxwell Lloyd and Venus Dinari 
 //----------------------------------------------------------------------
         
@@ -7,7 +7,7 @@
 
 //----------------------------------------------------------------------
 // Deals with very large numbers not able to be handles by c normally.
-// Made with the purpose to optimize flat c for a fibinacci sequence.
+// Made with the purpose to beat the compiler
 //----------------------------------------------------------------------
 
 //----------------------------------------------------------------------
