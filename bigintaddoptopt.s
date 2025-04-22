@@ -92,6 +92,7 @@ len1large:
         ULSUM   .req x23
         LINDEX  .req x24
         LSUMLENGTH .req x25
+        LLARGER  .req x26
 
         .global BigInt_add
 
@@ -118,7 +119,52 @@ BigInt_add:
         mov     x1, OADDEND2
         ldr     x0, [x0, LLENGTH]
         ldr     x1, [x1, LLENGTH]
-        bl      BigInt_larger
+
+
+
+
+
+
+
+BigInt_larger:
+        // save all local variables and parameters
+        mov     LLENGTH1, x0       
+        mov     LLENGTH2, x1
+
+        // if(lLength1 <= lLength2) goto len2large
+        cmp     LLENGTH1, LLENGTH2
+        ble     len2large
+
+        // lLarger = lLength1;
+        mov     LLARGER, LLENGTH1
+
+        // goto len1large;
+        b       len1large
+        
+len2large:
+
+        // lLarger = lLength2;
+        mov LLARGER, LLENGTH2
+
+len1large:
+
+        // return lLarger;
+        ldr x30, [sp]
+        ldr x19, [sp, 8]
+        ldr x20, [sp, 16]
+        ldr x21, [sp, 24]
+        add sp, sp, LARGER_STACK_BYTECOUNT
+        ret
+
+        .size   BigInt_larger, (. - BigInt_larger)
+
+
+
+
+
+
+
+
         mov     LSUMLENGTH, x0
 
         // if (oSum->lLength <= lSumLength) goto noClear;
