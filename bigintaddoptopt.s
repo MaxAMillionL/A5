@@ -33,7 +33,6 @@
         OSUM     .req x21
 
         // local variables
-        ULCARRY   .req x22
         ULSUM   .req x23
         LINDEX  .req x24
         LSUMLENGTH .req x25
@@ -89,10 +88,6 @@ fin:
         bl      memset
 
 noClear:
-
-        // ulCarry = 0;
-        mov     ULCARRY, 0
-
         // lIndex = 0;
         mov     LINDEX, 0
 
@@ -102,54 +97,27 @@ noClear:
 
  loop:
 
-        // ulSum = ulCarry;
-        mov     ULSUM, ULCARRY
-        
-        // ulCarry = 0;
-        mov     ULCARRY, 0
+        // ulSum = c flag;
+        bcs     carry
+        mov     ULSUM, 0
+        b       nocarry
+carry:
+        mov     ULSUM, 1
+nocarry:
 
         // ulSum += oAddend1->aulDigits[lIndex];
         mov     x0, OADDEND1
         add     x0, x0, AULDIGITS
         mov     x1, LINDEX
         ldr     x0, [x0, x1, lsl 3]
-        add     ULSUM, ULSUM, x0
-
-
-        // if (ulSum >= oAddend1->aulDigits[lIndex]) goto nooverflow1;
-        mov     x0, OADDEND1
-        add     x0, x0, AULDIGITS
-        mov     x1, LINDEX
-        ldr     x0, [x0, x1, lsl 3]
-        mov     x1, ULSUM
-        cmp     x1, x0
-        bhs     nooverflow1
-
-        // ulCarry = 1;
-        mov     ULCARRY, 1
-
-nooverflow1:
+        adcs    ULSUM, ULSUM, x0
 
         // ulSum += oAddend2->aulDigits[lIndex];
         mov     x0, OADDEND2
         add     x0, x0, AULDIGITS
         mov     x1, LINDEX
         ldr     x0, [x0, x1, lsl 3]
-        add     ULSUM, ULSUM, x0
-
-        // if (ulSum >= oAddend2->aulDigits[lIndex]) goto nooverflow2;
-        mov     x0, OADDEND2
-        add     x0, x0, AULDIGITS
-        mov     x1, LINDEX
-        ldr     x0, [x0, x1, lsl 3]
-        mov     x1, ULSUM
-        cmp     x1, x0
-        bhs     nooverflow2
-
-        //  ulCarry = 1;
-        mov     ULCARRY, 1
-
-nooverflow2:
+        adcs    ULSUM, ULSUM, x0
 
         // oSum->aulDigits[lIndex] = ulSum;
         mov     x0, OSUM
@@ -169,9 +137,8 @@ nooverflow2:
    
 endloop:
 
-        // if (ulCarry != 1) goto nocarryout;
-        cmp     ULCARRY, 1
-        bne     nocarryout
+        // if (c flag != 1) goto nocarryout;
+        bcc     nocarryout
    
         // if (lSumLength != MAX_DIGITS) goto notmaxdigit;
         cmp     LSUMLENGTH,  MAX_DIGITS
