@@ -96,11 +96,11 @@ noClear:
         // lIndex = 0;
         mov     LINDEX, 0
 
- loop:
-
         // if(lIndex >= lSumLength) goto endloop;
         cmp     LINDEX, LSUMLENGTH
         bge     endloop
+
+ loop:
 
         // ulSum = ulCarry;
         mov     ULSUM, ULCARRY
@@ -163,8 +163,9 @@ nooverflow2:
         // lIndex++;
         add     LINDEX, LINDEX, 1
 
-        // goto loop;
-        b       loop
+        // if(lIndex < lSumLength) goto loop;
+        cmp     LINDEX, LSUMLENGTH
+        blt     loop
    
 endloop:
 
