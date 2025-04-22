@@ -95,7 +95,7 @@ noClear:
         cmp     LINDEX, LSUMLENGTH
         bge     endloop
 
- loop:
+loop:
 
         // ulSum = c flag;
         bcs     carry

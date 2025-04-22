@@ -147,7 +147,7 @@ noClear:
         // lIndex = 0;
         mov     LINDEX, 0
 
- loop:
+loop:
 
         // if(lIndex >= lSumLength) goto endloop;
         cmp     LINDEX, LSUMLENGTH
