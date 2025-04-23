@@ -90,13 +90,16 @@ noClear:
         // lIndex = 0;
         mov     LINDEX, 0
 
-        // if(lIndex >= lSumLength) goto endloop;
-        cmp     LINDEX, LSUMLENGTH
-        bge     endloop
-
         // "initialize" c to 0
         mov     x0, 0
         adds    x0, x0, 0
+
+        // if(lIndex >= lSumLength) goto endloop;
+        sub     x0, LINDEX, LSUMLENGTH
+        CBZ     endloop
+        cmp     LINDEX, LSUMLENGTH
+        bge     endloop
+        
 loop:
         // ulSum += oAddend1->aulDigits[lIndex] + 
         // oAddend2->aulDigits[lIndex]
@@ -131,7 +134,7 @@ loop:
 endloop:
 
         // if (ulCarry != 1) goto nocarryout;
-        blo     nocarryout
+        bcc     nocarryout
    
         // if (lSumLength != MAX_DIGITS) goto notmaxdigit;
         cmp     LSUMLENGTH,  MAX_DIGITS
