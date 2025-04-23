@@ -131,7 +131,7 @@ loop:
 endloop:
 
         // if (ulCarry != 1) goto nocarryout;
-        bcc     nocarryout
+        blo     nocarryout
    
         // if (lSumLength != MAX_DIGITS) goto notmaxdigit;
         cmp     LSUMLENGTH,  MAX_DIGITS
