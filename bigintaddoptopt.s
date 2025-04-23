@@ -106,7 +106,7 @@ noClear:
         add     x0, x0, AULDIGITS
         mov     x1, LINDEX
         ldr     x0, [x0, x1, lsl 3]
-        
+
         adcs    ULSUM, x2, x0
 
         // oSum->aulDigits[lIndex] = ulSum;
@@ -121,19 +121,14 @@ noClear:
         // lIndex++;
         add     LINDEX, LINDEX, 1
 
-        // ulSum = c;
-        mov     ULSUM, ULCARRY
-
         // if(lIndex < lSumLength) goto loop;
-        cmp     LINDEX, LSUMLENGTH
-        blt     loop
-
+        sub     x0, LINDEX, LSUMLENGTH
+        CBNZ    x0, loop
    
 endloop:
 
         // if (ulCarry != 1) goto nocarryout;
-        cmp     ULCARRY, 1
-        bne     nocarryout
+        bcc     nocarryout
    
         // if (lSumLength != MAX_DIGITS) goto notmaxdigit;
         cmp     LSUMLENGTH,  MAX_DIGITS
