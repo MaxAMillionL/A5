@@ -96,7 +96,7 @@ noClear:
 
         // if(lIndex >= lSumLength) goto endloop;
         sub     x0, LINDEX, LSUMLENGTH
-        CBZ     endloop
+        CBZ     x0, endloop
         cmp     LINDEX, LSUMLENGTH
         bge     endloop
         
