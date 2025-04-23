@@ -95,6 +95,7 @@ noClear:
         bge     endloop
 
         // "initialize" c to 0
+        mov     x0, 0
         adds    x0, x0, 0
 loop:
         // ulSum += oAddend1->aulDigits[lIndex] + 
