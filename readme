@@ -158,8 +158,12 @@ mywcBoundaryTest5.txt: Checks for a long word to be one word with no
 newlines
 
 Statement Tests:
-mywcStatementTest1.txt: Touches every line of code in mywcflat.c, and 
-so will touch all lines within the arm64 
+mywcStatementTest1.txt: Touches every line of code in mywc.c, and 
+so will touch all lines within the arm64. In particular, the double
+space touches 34-46, where the word after a space touches 34-40, a word 
+longer than 1 touches 42-46, a newline tocuhes 48-49, having the last 
+word not have a space after touches 52-53, and the beginning and ending 
+is touches by the program not being empty.
 
 Stress Tests: 
 mywcStressTest1.txt: A large assortment of characters. In particular, 
