@@ -94,7 +94,9 @@ noClear:
         cmp     LINDEX, LSUMLENGTH
         bge     endloop
 
- loop:
+        // "initialize" c to 0
+        adds    x0, x0, 0
+loop:
         // ulSum += oAddend1->aulDigits[lIndex] + 
         // oAddend2->aulDigits[lIndex]
         mov     x0, OADDEND1
