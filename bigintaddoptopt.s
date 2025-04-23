@@ -94,15 +94,10 @@ noClear:
         cmp     LINDEX, LSUMLENGTH
         bge     endloop
 
-loop:
-
-        // ulSum = c flag;
-        bcs     carry
+        // ulSum = 0;
         mov     ULSUM, 0
-        b       nocarry
-carry:
-        mov     ULSUM, 1
-nocarry:
+
+loop:
 
         // ulSum += oAddend1->aulDigits[lIndex];
         mov     x0, OADDEND1
@@ -124,7 +119,6 @@ addnoc:
         add     x0, x0, AULDIGITS
         mov     x1, LINDEX
         ldr     x0, [x0, x1, lsl 3]
-        adcs    ULSUM, ULSUM, x0
         add     ULSUM, ULSUM, x0
 addwithc:
 
@@ -139,6 +133,14 @@ addwithc:
 
         // lIndex++;
         add     LINDEX, LINDEX, 1
+
+        // ulSum = c flag;
+        bcs     carry
+        mov     ULSUM, 0
+        b       nocarry
+carry:
+        mov     ULSUM, 1
+nocarry:
 
         // if(lIndex < lSumLength) goto loop;
         cmp     LINDEX, LSUMLENGTH
