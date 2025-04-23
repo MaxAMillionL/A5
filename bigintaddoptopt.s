@@ -33,6 +33,7 @@
         OSUM     .req x21
 
         // local variables
+        ULCARRY   .req x22
         ULSUM   .req x23
         LINDEX  .req x24
         LSUMLENGTH .req x25
@@ -47,6 +48,7 @@ BigInt_add:
         str     x19, [sp, 8]    // store oAddend1
         str     x20, [sp, 16]   // store oAddend1
         str     x21, [sp, 24]   // store oSum
+        str     x22, [sp, 32]   // store carry
         str     x23, [sp, 40]   // store ulSum
         str     x24, [sp, 48]   // store lIndex
         str     x25, [sp, 56]   // store lSumLength
@@ -87,6 +89,10 @@ fin:
         bl      memset
 
 noClear:
+
+        // ulCarry = 0;
+        mov     ULCARRY, 0
+
         // lIndex = 0;
         mov     LINDEX, 0
 
@@ -94,33 +100,56 @@ noClear:
         cmp     LINDEX, LSUMLENGTH
         bge     endloop
 
-        // ulSum = 0;
-        mov     ULSUM, 0
+ loop:
 
-loop:
+        // ulSum = ulCarry;
+        mov     ULSUM, ULCARRY
+        
+        // ulCarry = 0;
+        mov     ULCARRY, 0
 
         // ulSum += oAddend1->aulDigits[lIndex];
         mov     x0, OADDEND1
         add     x0, x0, AULDIGITS
         mov     x1, LINDEX
         ldr     x0, [x0, x1, lsl 3]
-        adcs    ULSUM, ULSUM, x0
-        bcs     addnoc
+        add     ULSUM, ULSUM, x0
+
+
+        // if (ulSum >= oAddend1->aulDigits[lIndex]) goto nooverflow1;
+        mov     x0, OADDEND1
+        add     x0, x0, AULDIGITS
+        mov     x1, LINDEX
+        ldr     x0, [x0, x1, lsl 3]
+        mov     x1, ULSUM
+        cmp     x1, x0
+        bhs     nooverflow1
+
+        // ulCarry = 1;
+        mov     ULCARRY, 1
+
+nooverflow1:
 
         // ulSum += oAddend2->aulDigits[lIndex];
         mov     x0, OADDEND2
         add     x0, x0, AULDIGITS
         mov     x1, LINDEX
         ldr     x0, [x0, x1, lsl 3]
-        adcs    ULSUM, ULSUM, x0
-        b       addwithc
-addnoc:
+        add     ULSUM, ULSUM, x0
+
+        // if (ulSum >= oAddend2->aulDigits[lIndex]) goto nooverflow2;
         mov     x0, OADDEND2
         add     x0, x0, AULDIGITS
         mov     x1, LINDEX
         ldr     x0, [x0, x1, lsl 3]
-        add     ULSUM, ULSUM, x0
-addwithc:
+        mov     x1, ULSUM
+        cmp     x1, x0
+        bhs     nooverflow2
+
+        //  ulCarry = 1;
+        mov     ULCARRY, 1
+
+nooverflow2:
 
         // oSum->aulDigits[lIndex] = ulSum;
         mov     x0, OSUM
@@ -134,22 +163,15 @@ addwithc:
         // lIndex++;
         add     LINDEX, LINDEX, 1
 
-        // ulSum = c flag;
-        bcs     carry
-        mov     ULSUM, 0
-        b       nocarry
-carry:
-        mov     ULSUM, 1
-nocarry:
-
         // if(lIndex < lSumLength) goto loop;
         cmp     LINDEX, LSUMLENGTH
         blt     loop
    
 endloop:
 
-        // if (c flag != 1) goto nocarryout;
-        bcc     nocarryout
+        // if (ulCarry != 1) goto nocarryout;
+        cmp     ULCARRY, 1
+        bne     nocarryout
    
         // if (lSumLength != MAX_DIGITS) goto notmaxdigit;
         cmp     LSUMLENGTH,  MAX_DIGITS
@@ -196,6 +218,7 @@ nocarryout:
         ldr     x19, [sp, 8]    // store oAddend1
         ldr     x20, [sp, 16]   // store oAddend1
         ldr     x21, [sp, 24]   // store oSum
+        ldr     x22, [sp, 32]   // store carry
         ldr     x23, [sp, 40]   // store ulSum
         ldr     x24, [sp, 48]   // store lIndex
         ldr     x25, [sp, 56]   // store lSumLength
